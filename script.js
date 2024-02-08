@@ -9,6 +9,14 @@ var computerSelection;
 
 const btns_action = document.querySelectorAll('.action-btn');
 const score_element = document.getElementById('score');
+const computer = document.getElementById('computer-selection');
+const player = document.getElementById('player-selection');
+const round_result = document.getElementById('round-result');
+const round_result_text = document.querySelector('#round-result span');
+round_result.style.display = 'none';
+const btn_replay = document.getElementById('replay');
+
+btn_replay.addEventListener('click', replay);
 
 btns_action.forEach((btn) => {
     btn.addEventListener('click', (e) => {
@@ -49,11 +57,18 @@ function playRound() {
     // var playerChoice = (String(playerSelection).toLowerCase()).replace(/\s/g, "");
     // checkPlayerChoice(playerChoice);
     // var [playerNumericValue, computerNumericValue] = setNumericValues(playerSelection, computerSelection);
+    if (match > 5) {
+        replay();
+    }
     match++;
     getComputerChoice();
+    player.innerText = playerSelection;
+    computer.innerText = computerSelection;
+    round_result.style.display = 'block';
     console.log("Your selection: " + playerSelection);
     console.log("Computer selection: " + computerSelection);
-    matchResult();
+    let result = matchResult();
+    round_result_text.textContent = result;
     setScore();
 }
 
@@ -110,53 +125,56 @@ function checkPlayerChoice(playerChoice) {
 }
 
 function matchResult () {
+    let result_text = "";
     switch (playerSelection) {
         case 'rock':
             if(computerSelection == "rock") {
-                alert("Draw! both selected rock");
+                result_text = "Draw! both selected rock";
                 draws++;
             }
             if(computerSelection == "paper") {
-                alert("You Lose! Paper beats rock");
+                result_text = "You Lose! Paper beats rock";
                 defeats++;
             }
             if(computerSelection == "scissors") {
-                alert("You Win! Rock beats scissors");
+                result_text = "You Win! Rock beats scissors";
                 victories++;
             }
             break;
         case 'paper':
             if(computerSelection == "rock") {
-                alert("You Win! Paper beats rock");
+                result_text = "You Win! Paper beats rock";
                 victories++;
             }
             if(computerSelection == "paper") {
-                alert("Draw! both selected paper");
+                result_text = "Draw! both selected paper";
                 draws++;
             }
             if(computerSelection == "scissors") {
-                alert("You Lose! Scissors beats paper");
+                result_text = "You Lose! Scissors beats paper";
                 defeats++;
             }
             break;
 
         case 'scissors':
             if(computerSelection == "rock") {
-                alert("You Lose! Rock beats scissors");
+                result_text = "You Lose! Rock beats scissors";
                 defeats++;
             }
             if(computerSelection == "paper") {
-                alert("You Win! Scissors beats paper");
+                result_text = "You Win! Scissors beats paper";
                 victories++;
             }
             if(computerSelection == "scissors") {
-                alert("Draw! both selected scissors");
+                result_text = "Draw! both selected scissors";
                 draws++;
             }
             break;
         default:
             break;
     }
+
+    return result_text;
 }
 
 function playGame() {
@@ -171,9 +189,20 @@ function setScore() {
     score_element.innerText = victories.toString();
     if (match == 5) {
         console.log(defeats);
-        alert(`Finish! victories: ${victories}; defeats: ${defeats}; draws: ${draws}`);
+        round_result_text.textContent = `Finish! victories: ${victories}; defeats: ${defeats}; draws: ${draws}`;
+        round_result_text.setAttribute('style', 'color: red;');
         draws = 0;
         defeats = 0;
         victories = 0;
     }
+}
+
+function replay() {
+    match = 0;
+    draws = 0;
+    defeats = 0;
+    victories = 0;
+    round_result_text.setAttribute('style', 'color: black;');
+    round_result.style.display = 'none';
+    score_element.innerText = victories.toString();
 }
