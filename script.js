@@ -1,21 +1,33 @@
 var playerSelection;
-var victories;
-var defeats;
-var draws;
-var computerSelection = getComputerChoice();
-const btn_round = document.getElementById("play-round");
-const btn_game = document.getElementById("play-game");
+var victories = 0;
+var defeats = 0;
+var draws = 0;
+var match = 0;
+var computerSelection;
+// const btn_round = document.getElementById("play-round");
+// const btn_game = document.getElementById("play-game");
 
-btn_round.addEventListener('click', () => {
-    playRound();
+const btns_action = document.querySelectorAll('.action-btn');
+const score_element = document.getElementById('score');
+
+btns_action.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+        var action_selected = e.target.id;
+        playerSelection = action_selected;
+        playRound();
+    });
 });
 
-btn_game.addEventListener('click', () => {
-    victories = 0;
-    defeats = 0;
-    draws = 0;
-    playGame();
-});
+// btn_round.addEventListener('click', () => {
+//     playRound();
+// });
+
+// btn_game.addEventListener('click', () => {
+//     victories = 0;
+//     defeats = 0;
+//     draws = 0;
+//     playGame();
+// });
 
 function getComputerChoice() {
     var choice = [
@@ -24,7 +36,8 @@ function getComputerChoice() {
         'rock'
     ];
     var randomNumber = Math.floor(Math.random()*choice.length);
-    return choice[randomNumber];
+    computerSelection = choice[randomNumber];
+    // return choice[randomNumber];
 }
 
 function getPlayerChoice() {
@@ -32,13 +45,16 @@ function getPlayerChoice() {
 }
 
 function playRound() {
-    getPlayerChoice();
-    var playerChoice = (String(playerSelection).toLowerCase()).replace(/\s/g, "");
-    checkPlayerChoice(playerChoice);
+    // getPlayerChoice();
+    // var playerChoice = (String(playerSelection).toLowerCase()).replace(/\s/g, "");
+    // checkPlayerChoice(playerChoice);
     // var [playerNumericValue, computerNumericValue] = setNumericValues(playerSelection, computerSelection);
+    match++;
+    getComputerChoice();
     console.log("Your selection: " + playerSelection);
     console.log("Computer selection: " + computerSelection);
     matchResult();
+    setScore();
 }
 
 // function setNumericValues(playerChoice, computerChoice) {
@@ -149,4 +165,15 @@ function playGame() {
     }
 
     alert(`Finish! victories: ${victories}; defeats: ${defeats}; draws: ${draws}`);
+}
+
+function setScore() {
+    score_element.innerText = victories.toString();
+    if (match == 5) {
+        console.log(defeats);
+        alert(`Finish! victories: ${victories}; defeats: ${defeats}; draws: ${draws}`);
+        draws = 0;
+        defeats = 0;
+        victories = 0;
+    }
 }
