@@ -1,21 +1,46 @@
+const btns_action = document.querySelectorAll('.action-btn');
+const score_element = document.getElementById('score');
+const computer = document.getElementById('computer-selection');
+const player = document.getElementById('player-selection');
+const round_result = document.getElementById('round-result');
+const round_result_text = document.querySelector('#round-result span');
+const btn_replay = document.getElementById('replay');
+
+var victories = 0;
+var defeats = 0;
+var draws = 0;
+var match = 0;
 var playerSelection;
-var victories;
-var defeats;
-var draws;
-var computerSelection = getComputerChoice();
-const btn_round = document.getElementById("play-round");
-const btn_game = document.getElementById("play-game");
+var computerSelection;
 
-btn_round.addEventListener('click', () => {
-    playRound();
+round_result.style.display = 'none';
+
+btn_replay.addEventListener('click', replay);
+
+btns_action.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+        var action_selected = e.target.id;
+        playerSelection = action_selected;
+        playRound();
+    });
 });
 
-btn_game.addEventListener('click', () => {
-    victories = 0;
-    defeats = 0;
-    draws = 0;
-    playGame();
-});
+function playRound() {
+    match++;
+    if (match > 5) {
+        replay();
+        match++;
+    }
+    getComputerChoice();
+    player.innerText = playerSelection;
+    computer.innerText = computerSelection;
+    round_result.style.display = 'block';
+    // console.log("Your selection: " + playerSelection);
+    // console.log("Computer selection: " + computerSelection);
+    let result = matchResult();
+    round_result_text.textContent = result;
+    setScore();
+}
 
 function getComputerChoice() {
     var choice = [
@@ -24,129 +49,79 @@ function getComputerChoice() {
         'rock'
     ];
     var randomNumber = Math.floor(Math.random()*choice.length);
-    return choice[randomNumber];
-}
-
-function getPlayerChoice() {
-    playerSelection = prompt("Enter your selection");
-}
-
-function playRound() {
-    getPlayerChoice();
-    var playerChoice = (String(playerSelection).toLowerCase()).replace(/\s/g, "");
-    checkPlayerChoice(playerChoice);
-    // var [playerNumericValue, computerNumericValue] = setNumericValues(playerSelection, computerSelection);
-    console.log("Your selection: " + playerSelection);
-    console.log("Computer selection: " + computerSelection);
-    matchResult();
-}
-
-// function setNumericValues(playerChoice, computerChoice) {
-//     switch (playerChoice) {
-//         case 'rock':
-//             playerChoice = 1;
-//             break;
-
-//         case 'paper':
-//             playerChoice = 2;
-//             break;
-
-//         case 'scissors':
-//             playerChoice = 3;
-//             break;
-    
-//         default:
-//             break;
-//     }
-
-//     switch (computerChoice) {
-//         case 'rock':
-//             computerChoice = 1;
-//             break;
-
-//         case 'paper':
-//             computerChoice = 2;
-//             break;
-
-//         case 'scissors':
-//             computerChoice = 3;
-//             break;
-    
-//         default:
-//             break;
-//     }
-
-//     return [playerChoice, computerChoice];
-// }
-
-function checkPlayerChoice(playerChoice) {
-    let condition = false;
-    while (condition == false) {
-        playerChoice = (String(playerChoice).toLowerCase()).replace(/\s/g, "");
-        if(playerChoice == "rock" || playerChoice == "paper" || playerChoice == "scissors") {
-            condition = true;
-            playerSelection = playerChoice;
-        } else {
-            alert("Please, enter a correct value (Rock, Paper, Scissors)");
-            playerChoice = prompt("Enter your selection");
-        }
-    }
+    computerSelection = choice[randomNumber];
 }
 
 function matchResult () {
+    let result_text = "";
     switch (playerSelection) {
         case 'rock':
             if(computerSelection == "rock") {
-                alert("Draw! both selected rock");
+                result_text = "Draw! both selected rock";
                 draws++;
             }
             if(computerSelection == "paper") {
-                alert("You Lose! Paper beats rock");
+                result_text = "You Lose! Paper beats rock";
                 defeats++;
             }
             if(computerSelection == "scissors") {
-                alert("You Win! Rock beats scissors");
+                result_text = "You Win! Rock beats scissors";
                 victories++;
             }
             break;
         case 'paper':
             if(computerSelection == "rock") {
-                alert("You Win! Paper beats rock");
+                result_text = "You Win! Paper beats rock";
                 victories++;
             }
             if(computerSelection == "paper") {
-                alert("Draw! both selected paper");
+                result_text = "Draw! both selected paper";
                 draws++;
             }
             if(computerSelection == "scissors") {
-                alert("You Lose! Scissors beats paper");
+                result_text = "You Lose! Scissors beats paper";
                 defeats++;
             }
             break;
 
         case 'scissors':
             if(computerSelection == "rock") {
-                alert("You Lose! Rock beats scissors");
+                result_text = "You Lose! Rock beats scissors";
                 defeats++;
             }
             if(computerSelection == "paper") {
-                alert("You Win! Scissors beats paper");
+                result_text = "You Win! Scissors beats paper";
                 victories++;
             }
             if(computerSelection == "scissors") {
-                alert("Draw! both selected scissors");
+                result_text = "Draw! both selected scissors";
                 draws++;
             }
             break;
         default:
             break;
     }
+
+    return result_text;
 }
 
-function playGame() {
-    for (let i = 0; i < 5; i++) {
-        playRound();
+function setScore() {
+    score_element.innerText = victories.toString();
+    if (match == 5) {
+        round_result_text.textContent = `Finish! victories: ${victories}; defeats: ${defeats}; draws: ${draws}`;
+        round_result_text.setAttribute('style', 'color: red;');
+        draws = 0;
+        defeats = 0;
+        victories = 0;
     }
+}
 
-    alert(`Finish! victories: ${victories}; defeats: ${defeats}; draws: ${draws}`);
+function replay() {
+    match = 0;
+    draws = 0;
+    defeats = 0;
+    victories = 0;
+    round_result_text.setAttribute('style', 'color: black;');
+    round_result.style.display = 'none';
+    score_element.innerText = victories.toString();
 }
