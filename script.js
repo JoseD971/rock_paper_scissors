@@ -57,10 +57,11 @@ function playRound() {
     // var playerChoice = (String(playerSelection).toLowerCase()).replace(/\s/g, "");
     // checkPlayerChoice(playerChoice);
     // var [playerNumericValue, computerNumericValue] = setNumericValues(playerSelection, computerSelection);
+    match++;
     if (match > 5) {
         replay();
+        match++;
     }
-    match++;
     getComputerChoice();
     player.innerText = playerSelection;
     computer.innerText = computerSelection;
