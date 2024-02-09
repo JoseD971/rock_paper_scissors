@@ -1,20 +1,19 @@
-var playerSelection;
-var victories = 0;
-var defeats = 0;
-var draws = 0;
-var match = 0;
-var computerSelection;
-// const btn_round = document.getElementById("play-round");
-// const btn_game = document.getElementById("play-game");
-
 const btns_action = document.querySelectorAll('.action-btn');
 const score_element = document.getElementById('score');
 const computer = document.getElementById('computer-selection');
 const player = document.getElementById('player-selection');
 const round_result = document.getElementById('round-result');
 const round_result_text = document.querySelector('#round-result span');
-round_result.style.display = 'none';
 const btn_replay = document.getElementById('replay');
+
+var victories = 0;
+var defeats = 0;
+var draws = 0;
+var match = 0;
+var playerSelection;
+var computerSelection;
+
+round_result.style.display = 'none';
 
 btn_replay.addEventListener('click', replay);
 
@@ -26,37 +25,7 @@ btns_action.forEach((btn) => {
     });
 });
 
-// btn_round.addEventListener('click', () => {
-//     playRound();
-// });
-
-// btn_game.addEventListener('click', () => {
-//     victories = 0;
-//     defeats = 0;
-//     draws = 0;
-//     playGame();
-// });
-
-function getComputerChoice() {
-    var choice = [
-        'paper',
-        'scissors',
-        'rock'
-    ];
-    var randomNumber = Math.floor(Math.random()*choice.length);
-    computerSelection = choice[randomNumber];
-    // return choice[randomNumber];
-}
-
-function getPlayerChoice() {
-    playerSelection = prompt("Enter your selection");
-}
-
 function playRound() {
-    // getPlayerChoice();
-    // var playerChoice = (String(playerSelection).toLowerCase()).replace(/\s/g, "");
-    // checkPlayerChoice(playerChoice);
-    // var [playerNumericValue, computerNumericValue] = setNumericValues(playerSelection, computerSelection);
     match++;
     if (match > 5) {
         replay();
@@ -66,63 +35,21 @@ function playRound() {
     player.innerText = playerSelection;
     computer.innerText = computerSelection;
     round_result.style.display = 'block';
-    console.log("Your selection: " + playerSelection);
-    console.log("Computer selection: " + computerSelection);
+    // console.log("Your selection: " + playerSelection);
+    // console.log("Computer selection: " + computerSelection);
     let result = matchResult();
     round_result_text.textContent = result;
     setScore();
 }
 
-// function setNumericValues(playerChoice, computerChoice) {
-//     switch (playerChoice) {
-//         case 'rock':
-//             playerChoice = 1;
-//             break;
-
-//         case 'paper':
-//             playerChoice = 2;
-//             break;
-
-//         case 'scissors':
-//             playerChoice = 3;
-//             break;
-    
-//         default:
-//             break;
-//     }
-
-//     switch (computerChoice) {
-//         case 'rock':
-//             computerChoice = 1;
-//             break;
-
-//         case 'paper':
-//             computerChoice = 2;
-//             break;
-
-//         case 'scissors':
-//             computerChoice = 3;
-//             break;
-    
-//         default:
-//             break;
-//     }
-
-//     return [playerChoice, computerChoice];
-// }
-
-function checkPlayerChoice(playerChoice) {
-    let condition = false;
-    while (condition == false) {
-        playerChoice = (String(playerChoice).toLowerCase()).replace(/\s/g, "");
-        if(playerChoice == "rock" || playerChoice == "paper" || playerChoice == "scissors") {
-            condition = true;
-            playerSelection = playerChoice;
-        } else {
-            alert("Please, enter a correct value (Rock, Paper, Scissors)");
-            playerChoice = prompt("Enter your selection");
-        }
-    }
+function getComputerChoice() {
+    var choice = [
+        'paper',
+        'scissors',
+        'rock'
+    ];
+    var randomNumber = Math.floor(Math.random()*choice.length);
+    computerSelection = choice[randomNumber];
 }
 
 function matchResult () {
@@ -178,18 +105,9 @@ function matchResult () {
     return result_text;
 }
 
-function playGame() {
-    for (let i = 0; i < 5; i++) {
-        playRound();
-    }
-
-    alert(`Finish! victories: ${victories}; defeats: ${defeats}; draws: ${draws}`);
-}
-
 function setScore() {
     score_element.innerText = victories.toString();
     if (match == 5) {
-        console.log(defeats);
         round_result_text.textContent = `Finish! victories: ${victories}; defeats: ${defeats}; draws: ${draws}`;
         round_result_text.setAttribute('style', 'color: red;');
         draws = 0;
